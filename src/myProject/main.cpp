@@ -59,14 +59,13 @@ namespace
 		{
 			check_key_presence(key);
 		}
-
 	};
 
 }
 
 int main()
 {
-	DEFINE_LOGGER(main);
+	DEFINE_LOGGER_AlWAYS(main);
 
 	WARN_LOG_AlWAYS(main, "welcome : {}", settings.getWelocomePhrase());
 	WARN_LOG_AlWAYS(main, "press ESC to exit ...");

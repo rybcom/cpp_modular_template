@@ -1,6 +1,6 @@
 # C++ project template
 
-<img src="https://github.com/rybcom/cpp_modular_template/modular_template_img.png">
+<img src="modular_template_img.png">
 
 ## Usage
 

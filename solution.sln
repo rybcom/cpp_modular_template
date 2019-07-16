@@ -1,0 +1,72 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mySolution", "mySolution", "{CF2D5CBB-BB26-7B0D-E458-6092D0B05A19}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "myProject", "intermediate\project_files\myProject.vcxproj", "{62D56956-CE3F-1ECD-177E-CF728327FC21}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{FD47AE19-69FD-260F-F2F1-20E65EA61D13}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "config", "intermediate\project_files\config.vcxproj", "{7B6CE4F6-670E-0FCD-50C9-22213C0A961D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "event_system", "intermediate\project_files\event_system.vcxproj", "{8BD9C67A-773C-561F-20C2-8ED50C0422A2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "logger", "intermediate\project_files\logger.vcxproj", "{4507DF0B-31A9-09E2-1A64-1D3606A59032}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "user_input", "intermediate\project_files\user_input.vcxproj", "{D35F15C5-BF17-5712-281F-306E14F6F102}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "utilities", "intermediate\project_files\utilities.vcxproj", "{212A0ED3-8D94-C249-D6D2-73EF427CA09E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		debug|win64 = debug|win64
+		profiler|win64 = profiler|win64
+		release|win64 = release|win64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{62D56956-CE3F-1ECD-177E-CF728327FC21}.debug|win64.ActiveCfg = debug win64|x64
+		{62D56956-CE3F-1ECD-177E-CF728327FC21}.debug|win64.Build.0 = debug win64|x64
+		{62D56956-CE3F-1ECD-177E-CF728327FC21}.profiler|win64.ActiveCfg = profiler win64|x64
+		{62D56956-CE3F-1ECD-177E-CF728327FC21}.profiler|win64.Build.0 = profiler win64|x64
+		{62D56956-CE3F-1ECD-177E-CF728327FC21}.release|win64.ActiveCfg = release win64|x64
+		{62D56956-CE3F-1ECD-177E-CF728327FC21}.release|win64.Build.0 = release win64|x64
+		{7B6CE4F6-670E-0FCD-50C9-22213C0A961D}.debug|win64.ActiveCfg = debug win64|x64
+		{7B6CE4F6-670E-0FCD-50C9-22213C0A961D}.debug|win64.Build.0 = debug win64|x64
+		{7B6CE4F6-670E-0FCD-50C9-22213C0A961D}.profiler|win64.ActiveCfg = profiler win64|x64
+		{7B6CE4F6-670E-0FCD-50C9-22213C0A961D}.profiler|win64.Build.0 = profiler win64|x64
+		{7B6CE4F6-670E-0FCD-50C9-22213C0A961D}.release|win64.ActiveCfg = release win64|x64
+		{7B6CE4F6-670E-0FCD-50C9-22213C0A961D}.release|win64.Build.0 = release win64|x64
+		{8BD9C67A-773C-561F-20C2-8ED50C0422A2}.debug|win64.ActiveCfg = debug win64|x64
+		{8BD9C67A-773C-561F-20C2-8ED50C0422A2}.profiler|win64.ActiveCfg = profiler win64|x64
+		{8BD9C67A-773C-561F-20C2-8ED50C0422A2}.release|win64.ActiveCfg = release win64|x64
+		{4507DF0B-31A9-09E2-1A64-1D3606A59032}.debug|win64.ActiveCfg = debug win64|x64
+		{4507DF0B-31A9-09E2-1A64-1D3606A59032}.debug|win64.Build.0 = debug win64|x64
+		{4507DF0B-31A9-09E2-1A64-1D3606A59032}.profiler|win64.ActiveCfg = profiler win64|x64
+		{4507DF0B-31A9-09E2-1A64-1D3606A59032}.profiler|win64.Build.0 = profiler win64|x64
+		{4507DF0B-31A9-09E2-1A64-1D3606A59032}.release|win64.ActiveCfg = release win64|x64
+		{4507DF0B-31A9-09E2-1A64-1D3606A59032}.release|win64.Build.0 = release win64|x64
+		{D35F15C5-BF17-5712-281F-306E14F6F102}.debug|win64.ActiveCfg = debug win64|x64
+		{D35F15C5-BF17-5712-281F-306E14F6F102}.debug|win64.Build.0 = debug win64|x64
+		{D35F15C5-BF17-5712-281F-306E14F6F102}.profiler|win64.ActiveCfg = profiler win64|x64
+		{D35F15C5-BF17-5712-281F-306E14F6F102}.profiler|win64.Build.0 = profiler win64|x64
+		{D35F15C5-BF17-5712-281F-306E14F6F102}.release|win64.ActiveCfg = release win64|x64
+		{D35F15C5-BF17-5712-281F-306E14F6F102}.release|win64.Build.0 = release win64|x64
+		{212A0ED3-8D94-C249-D6D2-73EF427CA09E}.debug|win64.ActiveCfg = debug win64|x64
+		{212A0ED3-8D94-C249-D6D2-73EF427CA09E}.debug|win64.Build.0 = debug win64|x64
+		{212A0ED3-8D94-C249-D6D2-73EF427CA09E}.profiler|win64.ActiveCfg = profiler win64|x64
+		{212A0ED3-8D94-C249-D6D2-73EF427CA09E}.profiler|win64.Build.0 = profiler win64|x64
+		{212A0ED3-8D94-C249-D6D2-73EF427CA09E}.release|win64.ActiveCfg = release win64|x64
+		{212A0ED3-8D94-C249-D6D2-73EF427CA09E}.release|win64.Build.0 = release win64|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{62D56956-CE3F-1ECD-177E-CF728327FC21} = {CF2D5CBB-BB26-7B0D-E458-6092D0B05A19}
+		{7B6CE4F6-670E-0FCD-50C9-22213C0A961D} = {FD47AE19-69FD-260F-F2F1-20E65EA61D13}
+		{8BD9C67A-773C-561F-20C2-8ED50C0422A2} = {FD47AE19-69FD-260F-F2F1-20E65EA61D13}
+		{4507DF0B-31A9-09E2-1A64-1D3606A59032} = {FD47AE19-69FD-260F-F2F1-20E65EA61D13}
+		{D35F15C5-BF17-5712-281F-306E14F6F102} = {FD47AE19-69FD-260F-F2F1-20E65EA61D13}
+		{212A0ED3-8D94-C249-D6D2-73EF427CA09E} = {FD47AE19-69FD-260F-F2F1-20E65EA61D13}
+	EndGlobalSection
+EndGlobal

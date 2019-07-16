@@ -30,7 +30,7 @@ private:										\
 
 #define ConfigProperty(type, name) \
 public:											\
-	type   name() const { return name;}	\
+	type   get##name() const { return name;}	\
 private:										\
 	type name{};								\
 

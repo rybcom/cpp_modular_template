@@ -20,5 +20,5 @@ int main()
 {
 	DEFINE_LOGGER(main);
 
-	WARN_LOG_AlWAYS(main, "Welcome : {}",settings.getWelocomePhrase());
+	WARN_LOG_AlWAYS(main, "Welcome : {}",settings.getWelocomePhrase()); 
 }

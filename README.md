@@ -15,6 +15,7 @@
 * Log
 * Event
 * Configuration
+* Ranges
 * User input
 
 ## License

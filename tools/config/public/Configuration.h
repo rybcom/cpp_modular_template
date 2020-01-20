@@ -10,7 +10,7 @@
 
 
 #define CONFIGURATION_CLASS(ConfigClass) \
-class ConfigClass : public config::Configuration
+struct ConfigClass : public config::Configuration
 
 #define CONFIGURATION_INIT(ConfigType,InitFile) \
 												\
@@ -27,7 +27,7 @@ class ConfigClass : public config::Configuration
 		void initProperties()					\
 
 
-
+// deprecated >> use as const inline variable for your configuration object
 #define ConfigProperty(type, name,default_value) \
 public:											\
 	type  get##name() const { return name;}	\

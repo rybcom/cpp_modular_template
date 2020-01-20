@@ -3,12 +3,13 @@
 
 #include "project_config.h"
 #include "Logger.h"
-#include "Configuration.h"
 #include "KeyboardEnums.h"
 #include "Keyboard.h"
 #include "Ranges.h"
 #include <vector>
 #include <string>
+#include "StopWatch.h"
+#include "settings.h"
 
 #if (RUN_WITH_GUI() ==  false && RUN_AS_UNIT_TESTING() == false) 
 
@@ -17,15 +18,6 @@ namespace
 	bool bExit = false;
 	std::vector<std::string> words = { "JULY","MOUSE","TABLE","CAP","WATER","JOHN","TORONTO","CAR" };
 
-	class SettingsConfig : public config::Configuration
-	{
-		ConfigProperty(std::string, WelocomePhrase, "hello");
-
-		CONFIGURATION_INIT(SettingsConfig, R"(..\init\settings.ini)")
-		{
-			WelocomePhrase = get_string("intro", "welcome_phrase", WelocomePhrase);
-		}
-	} settings;
 
 
 	auto constains_key_char(user_input::Key key)
@@ -69,17 +61,22 @@ namespace
 int main()
 {
 
-	INFO_LOG_ALWAYS("welcome : {}", settings.getWelocomePhrase());
+	StopWatch stopwatch;
+
+	INFO_LOG_ALWAYS("welcome : {}", config::settings.welcome_phrase);
 	INFO_LOG_ALWAYS("press ESC to exit ...");
 
 	user_input::registerHandlerFor_KeyUp(key_event_action);
+
+	stopwatch.Restart();
 
 	while (!bExit)
 	{
 		user_input::updateKeyboardState();
 	}
 
-	INFO_LOG_ALWAYS("bye-bye");
+	INFO_LOG_ALWAYS("end : {}", config::settings.goodbye_phrase);
+	INFO_LOG_ALWAYS("elapsed time : {} seconds", stopwatch.elapsed_s());
 
 }
 

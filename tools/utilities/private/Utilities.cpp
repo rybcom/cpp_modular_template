@@ -30,7 +30,7 @@ namespace aux
 	{
 		if (auto ig_param = get_command_parameter(0))
 		{
-			std::string path = R"(..\init\vrm_cigi_bridge\)" + ig_param.value() + R"(\)" + file;
+			std::string path = R"(..\init\)" + ig_param.value() + R"(\)" + file;
 		
 			if (std::filesystem::exists(path))
 			{
@@ -38,7 +38,7 @@ namespace aux
 			}
 		}
 
-		return  R"(..\init\vrm_cigi_bridge\)" + file;
+		return  R"(..\init\)" + file;
 	}
 
 	std::string to_lower_case(std::string const  & text)

@@ -2,7 +2,6 @@
 solution_name = "solution"
 solution_dir ="%{wks.location}"  
 platform_specifier = "%{cfg.buildcfg}_%{cfg.platform}"
-rundir =solution_dir .."/run/" .. platform_specifier;
 
 workspace (solution_name)
 	
@@ -20,11 +19,16 @@ workspace (solution_name)
 
 	includedirs
 	{
-		"src/%{prj.name}/public",
-		"src/%{prj.name}/private",
-
-		"tools/spdlog/include",
+		"tools/project_config/public",
+		"tools/fmt/public",
 		"tools/logger/public",
+		"tools/user_input/public",
+		"tools/utilities/public",
+		"tools/config/public",
+		"tools/event_system/public",
+		"tools/stopwatch/public",
+		"tools/catch2/public",
+		"tools/imgui/public",
 	}
 
 	configurations 
@@ -34,71 +38,189 @@ workspace (solution_name)
 		"profiler" 
 	}
 	
-	files 
-	{
-		"src/%{prj.name}/**.cpp",
-		"src/%{prj.name}/**.h",
-	}
+	
 
 	filter "configurations:debug"
   		optimize "Off"
-  		defines {"LOGGING_ENABLED=true"}
+  		defines {
+  				"CONFIGURATION_DEBUG=true",
+  				"CONFIGURATION_PROFILER=false",
+  				"CONFIGURATION_RELEASE=false",
+  				}
 
 	filter "configurations:profiler"
   		optimize "Full"
-  		defines {"LOGGING_ENABLED=true"}
+  		defines {
+  				"CONFIGURATION_DEBUG=false",
+  				"CONFIGURATION_PROFILER=true",
+  				"CONFIGURATION_RELEASE=false",
+  				}
   		
 	filter "configurations:release"
   		optimize "Full"
-  		defines {"LOGGING_ENABLED=false"}
+  		defines {
+  				"CONFIGURATION_DEBUG=false",
+  				"CONFIGURATION_PROFILER=false",
+  				"CONFIGURATION_RELEASE=true",
+  				}
 
-	group "mySolution"
+
+group "app"
+
+		----------------------------------------------
+	  	--										    --
+	  	--					project_config			--
+	  	--											--
+	  	----------------------------------------------
+
+		project "project_config"
+			location "intermediate/project_files"
+			kind "None"
+			language "C++"
+			cppdialect "C++17"
+
+			files
+			{
+				"tools/%{prj.name}/public/*",
+			}
+
 
 	  	----------------------------------------------
 	  	--										    --
-	  	--					myProject				--
+	  	--					applicatoin				--
 	  	--											--
 	  	----------------------------------------------
 
 
-		project "myProject"
+		project "application"
 			location "intermediate/project_files"
 			kind "ConsoleApp"
 			language "C++"
 			cppdialect "C++17"
 	
-			postbuildcommands 
-			{
-  				"{MKDIR} ../../run/%{cfg.buildcfg}_%{cfg.platform}",
-  				"{COPY} %{cfg.buildtarget.abspath} ../../run/%{cfg.buildcfg}_%{cfg.platform}",
-			}
-		
-			defines 
-			{
-				"UPDATE_USER_INPUT_EVENTS=true",
-			}
 
 			includedirs
 			{
+				"src/%{prj.name}",
+			}
 
-				"tools/user_input/public",
-				"tools/utilities/public",
-				"tools/config/public",
-				"tools/event_system/public",
+			files 
+			{
+				"src/%{prj.name}/**.cpp",
+				"src/%{prj.name}/**.h",
 			}
 
 			links
 			{
-				"logger",
+				"fmt",
+				"imgui",
 				"user_input",
-				"utilities",
 				"config",
+				"utilities",
+				"stopwatch"
 			}
 
-			debugcommand (rundir .. "/%{cfg.buildtarget.name}")
-			debugdir (rundir)
+			debugargs 
+			{
+				"test_argument_1",
+				"test_argument_2",
+				"test_argument_3",
+			}
 
-	group "tools"
+
+			filter "configurations:debug"
+		  		defines 
+		  		{
+		  			"UPDATE_USER_INPUT_EVENTS=true",
+		  		}
+				postbuildcommands 
+				{
+	  				"{MKDIR} ../../run64_debug/",
+	  				"{COPY} %{cfg.buildtarget.abspath} ../../run64_debug/",
+				}
+				debugcommand (solution_dir .."/run64_debug/" .. "%{cfg.buildtarget.name}")
+				debugdir (solution_dir .."/run64_debug")
+
+			filter "configurations:profiler"
+		  		defines 
+		  		{
+		  			"UPDATE_USER_INPUT_EVENTS=false",
+		  		}
+		  		postbuildcommands 
+				{
+	  				"{MKDIR} ../../run64_profiler/",
+	  				"{COPY} %{cfg.buildtarget.abspath} ../../run64_profiler/",
+				}
+		  		debugcommand (solution_dir .."/run64_profiler/" .. "%{cfg.buildtarget.name}")
+				debugdir (solution_dir .."/run64_profiler")
+			
+			filter "configurations:release"
+		  		defines 
+		  		{
+		  			"UPDATE_USER_INPUT_EVENTS=false",
+		  		}
+		  		postbuildcommands 
+				{
+	  				"{MKDIR} ../../run64_release/",
+	  				"{COPY} %{cfg.buildtarget.abspath} ../../run64_release/",
+				}
+		  		debugcommand (solution_dir .."/run64_release/" .. "%{cfg.buildtarget.name}")
+				debugdir (solution_dir .."/run64_release")
+
+group "tools"
+
+
+			----------------------------------------------
+		  	--										    --
+		  	--					imgui    				--
+		  	--											--
+		  	----------------------------------------------
+
+			project "imgui"
+				location "intermediate/project_files"
+				kind "StaticLib"
+				language "C++"
+				cppdialect "C++17"
+
+				includedirs
+				{
+					"tools/%{prj.name}/public",
+					"tools/%{prj.name}/private",
+				}
+
+				files 
+				{
+					"tools/%{prj.name}/**.cpp",
+					"tools/%{prj.name}/**.h",
+				}
+
+				links
+				{
+					"d3d11.lib","d3dcompiler.lib","dxgi.lib",
+				}
+			----------------------------------------------
+		  	--										    --
+		  	--					fmt      				--
+		  	--											--
+		  	----------------------------------------------
+
+			project "fmt"
+				location "intermediate/project_files"
+				kind "StaticLib"
+				language "C++"
+				cppdialect "C++17"
+
+				includedirs
+				{
+					"tools/%{prj.name}/public",
+					"tools/%{prj.name}/private",
+				}
+
+				files 
+				{
+					"tools/%{prj.name}/**.cc",
+					"tools/%{prj.name}/**.h",
+				}
 
 			----------------------------------------------
 		  	--										    --
@@ -112,6 +234,7 @@ workspace (solution_name)
 
 				files 
 				{
+					"tools/%{prj.name}/**.cpp",
 					"tools/%{prj.name}/**.h",
 				}
 
@@ -139,6 +262,7 @@ workspace (solution_name)
 					"tools/%{prj.name}/**.h",
 				}
 
+
 			----------------------------------------------
 		  	--										    --
 		  	--					user_input				--
@@ -163,6 +287,7 @@ workspace (solution_name)
 					"tools/%{prj.name}/**.h",
 				}
 
+		
 			----------------------------------------------
 		  	--										    --
 		  	--					logger					--
@@ -171,14 +296,13 @@ workspace (solution_name)
 
 			project "logger"
 				location "intermediate/project_files"
-				kind "StaticLib"
+				kind "None"
 				language "C++"
 				cppdialect "C++17"
 			
 				includedirs
 				{
 					"tools/%{prj.name}/public",
-					"tools/%{prj.name}/private",
 				}
 
 				files 
@@ -187,6 +311,29 @@ workspace (solution_name)
 					"tools/%{prj.name}/**.h",
 				}
 
+			----------------------------------------------
+		  	--										    --
+		  	--					stopwatch				--
+		  	--											--
+		  	----------------------------------------------
+
+			project "stopwatch"
+				location "intermediate/project_files"
+				kind "StaticLib"
+				language "C++"
+				cppdialect "C++17"
+			
+				includedirs
+				{
+					"tools/%{prj.name}/public",
+				}
+
+				files 
+				{
+					"tools/%{prj.name}/**.cpp",
+					"tools/%{prj.name}/**.h",
+				}
+				
 			----------------------------------------------
 		  	--										    --
 		  	--					config 					--
@@ -212,8 +359,11 @@ workspace (solution_name)
 					"tools/%{prj.name}/**.h",
 				}
 
-		group ""
+		
 
+		
+		group ""
+	 	
 
 
 

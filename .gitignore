@@ -1,5 +1,7 @@
 # Directories
-run/
+run64_debug/
+run64_release/
+run64_profiler/
 intermediate/
 bin/
 .vs/

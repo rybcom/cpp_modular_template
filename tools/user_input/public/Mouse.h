@@ -40,4 +40,6 @@ namespace user_input
 
 	void registerHandlerFor_MouseButtonDown(std::function<void(MouseButton const &)>);
 
+	void registerHandlerFor_MouseScroll(std::function<void(int)>);
+
 }

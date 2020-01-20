@@ -1,9 +1,16 @@
 #pragma once
 #include <string>
+#include <memory>
+#include <array>
 #include "INIReader.h"
 
 
 #pragma region macros
+
+
+
+#define CONFIGURATION_CLASS(ConfigClass) \
+class ConfigClass : public config::Configuration
 
 #define CONFIGURATION_INIT(ConfigType,InitFile) \
 												\
@@ -21,18 +28,11 @@
 
 
 
-#define ConfigProperty_DefaultValue(type, name,default_value) \
+#define ConfigProperty(type, name,default_value) \
 public:											\
 	type  get##name() const { return name;}	\
 private:										\
-	type name{default_value};					\
-
-#define ConfigProperty(type, name) \
-public:											\
-	type   get##name() const { return name;}	\
-private:										\
-	type name{};								\
-
+	type name{default_value}					\
 
 #pragma endregion
 
@@ -64,13 +64,20 @@ namespace config
 
 	protected:
 
-		std::string get_string(const std::string& section, const std::string& name, const std::string& default_value) const;
+		std::string get_string(const std::string& section, const std::string& name, const std::string& default_value = {}) const;
 
-		long get_int(const std::string& section, const std::string& name, long default_value) const;
+		int get_int(const std::string& section, const std::string& name, long default_value = {}) const;
 
-		double get_real(const std::string& section, const std::string& name, double default_value) const;
+		unsigned int get_unsigned_int(const std::string& section, const std::string& name, unsigned int default_value = {}) const;
 
-		bool get_bool(const std::string& section, const std::string& name, bool default_value) const;
+		double get_real(const std::string& section, const std::string& name, double default_value = {}) const;
+
+		float get_float(const std::string& section, const std::string& name, float default_value = {}) const;
+
+		template<class T, size_t Size>
+		std::array<T, Size>  get_array(const std::string& section, const std::string& name, std::array<T, Size>  default_value = {}) const;
+
+		bool get_bool(const std::string& section, const std::string& name, bool default_value = {}) const;
 
 		bool has_value(const std::string& section, const std::string& name) const;
 

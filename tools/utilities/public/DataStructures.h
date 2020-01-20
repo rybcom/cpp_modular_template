@@ -1,29 +1,21 @@
 #pragma once
 #include <cmath>
 #include <string>
+#include <array>
 
-#define cmp_floating(x,y)  (abs(x - y) < 0.0001)
+#define cmp_floating(x,y)  (std::abs(x - y) < 0.0001)
 
 namespace aux
 {
 
+
+
 	template<typename T>
 	struct Vector3
 	{
-		T x;
-		T y;
-		T z;
-
-		Vector3(T x, T y, T z)
-			:
-			x{ x },
-			y{ y },
-			z{ z }
-		{}
-
-		Vector3()
-			: Vector3(0, 0, 0)
-		{}
+		T x = {};
+		T y = {};
+		T z = {};
 
 #pragma region operators 
 
@@ -33,13 +25,15 @@ namespace aux
 
 		Vector3 operator+(T rhs) const { return { x + rhs ,  y + rhs , z + rhs }; }
 
-		Vector3 operator-(const Vector3& rhs) const { return { x - rhs.x ,y - rhs.y , z - rhs.z }; }
+		Vector3 operator-(Vector3 const & rhs) const { return { x - rhs.x ,y - rhs.y , z - rhs.z }; }
 
-		Vector3 operator+(const Vector3& rhs) const { return { x + rhs.x ,y + rhs.y , z + rhs.z }; }
+		Vector3 operator+(Vector3 const & rhs) const { return { x + rhs.x ,y + rhs.y , z + rhs.z }; }
 
+		Vector3& operator-=(Vector3 const & rhs) { this->x -= rhs.x; this->y -= rhs.y; this->z -= rhs.z; return *this; }
 
+		Vector3& operator+=(Vector3 const & rhs) { this->x += rhs.x; this->y += rhs.y; this->z += rhs.z; return *this; }
 
-		bool operator==(const Vector3& rhs) const
+		bool operator==(Vector3 const & rhs) const
 		{
 			return cmp_floating(this->x, rhs.x) &&
 				cmp_floating(this->y, rhs.y) &&
@@ -56,12 +50,14 @@ namespace aux
 
 #pragma endregion
 
-#pragma region conversion
-
-
-#pragma  endregion
-
 	};
+
+
+	template<typename T>
+	Vector3<T> to_vector3(std::array<T, 3> const & arr)
+	{
+		return { arr[0],arr[1],arr[2] };
+	}
 
 	template<typename T>
 	std::string aux::Vector3<T>::toString() const
@@ -72,22 +68,10 @@ namespace aux
 	template<typename T>
 	struct Vector4
 	{
-		T x;
-		T y;
-		T z;
-		T w;
-
-		Vector4(T x, T y, T z, T w)
-			:
-			x{ x },
-			y{ y },
-			z{ z },
-			w{ w }
-		{}
-
-		Vector4()
-			: Vector4(0, 0, 0, 0)
-		{}
+		T x = {};
+		T y = {};
+		T z = {};
+		T w = {};
 
 #pragma region operators 
 
@@ -114,29 +98,15 @@ namespace aux
 
 #pragma endregion
 
-
-#pragma region conversion
-
-
-#pragma  endregion
 	};
 
 	struct Rotation
 	{
-		double h;
-		double p;
-		double r;
+		double h = {};
+		double p = {};
+		double r = {};
 
-		Rotation(double par_h, double par_p, double par_r)
-			:
-			h{ par_h },
-			p{ par_p },
-			r{ par_r }
-		{}
 
-		Rotation()
-			: Rotation(0, 0, 0)
-		{}
 
 #pragma region operators 
 
@@ -164,55 +134,12 @@ namespace aux
 
 #pragma endregion
 
-#pragma region conversion
-
-
-	/*	operator Vector3_STRUCT() const
-		{
-			return { (double)(h),(double)(p),(double)(r) };
-		}
-
-		operator osg::Vec3d() const
-		{
-			return { (double)(h),(double)(p),(double)(r) };
-		}
-
-		operator osg::Vec3f() const
-		{
-			return { (float)(h),(float)(p),(float)(r) };
-		}
-
-		Rotation(Vector3_STRUCT const & from)
-		{
-			h = (double)from.x;
-			p = (double)from.y;
-			r = (double)from.z;
-		}
-
-		Rotation(osg::Vec3d const & from)
-		{
-			h = (double)from.x();
-			p = (double)from.y();
-			r = (double)from.z();
-		}
-
-		Rotation(osg::Vec3f const & from)
-		{
-			h = (double)from.x();
-			p = (double)from.y();
-			r = (double)from.z();
-		}*/
-
-
-#pragma  endregion
-
-
 		std::string toString() const;
-
 	};
 
 	using NormalVector = Vector3<double>;
 	using Position = Vector3<double>;
+	using Position_Float = Vector3<float>;
 	using Color = Vector4<float>;
 
 
@@ -265,7 +192,7 @@ namespace aux
 
 
 
-	namespace Colors
+	namespace colors
 	{
 		//obtiahnute z directx Colors namespaces
 

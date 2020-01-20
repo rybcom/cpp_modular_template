@@ -1,17 +1,18 @@
 #include "Keyboard.h"
 #include "KeyState.h"
 #include <vector>
+#include <chrono>
 
 namespace user_input
 {
-	namespace
-	{
 
 		using KeyStateList = std::vector<KeyState>;
 
+		std::wstring _windowHandlerName;
+		bool _checkForWindow = false;
 		KeyStateList _keyStateList;
 
-		std::vector<std::function<void(Key)>> _keyPressedCallbacks;
+		std::vector<std::function<void(Key, DeltaTime)>> _keyPressedCallbacks;
 		std::vector<std::function<void(Key)>> _keyUpCallbacks;
 		std::vector<std::function<void(Key)>> _keyDownCallbacks;
 
@@ -28,6 +29,37 @@ namespace user_input
 			Key::NumPad6, Key::NumPad7, Key::NumPad8, Key::NumPad9, Key::Add,Key::Subtract
 
 		};
+
+		bool isHandlerWindowActive()
+		{
+			auto wstring_to_string = [](std::wstring const& s)
+			{
+				std::string temp(s.length(), ' ');
+				std::copy(s.begin(), s.end(), temp.begin());
+				return temp;
+			};
+
+			if (_checkForWindow)
+			{
+				auto hwnd = GetActiveWindow();
+				if (hwnd)
+				{
+					int len = GetWindowTextLength(hwnd);
+					std::wstring s;
+					s.resize(len);
+					GetWindowText(hwnd, const_cast<wchar_t*>(s.c_str()), len );
+
+					return s == _windowHandlerName;
+
+				}
+				return false;
+
+			}
+			else
+			{
+				return true;
+			}
+		}
 
 		void initKeyStates()
 		{
@@ -47,12 +79,26 @@ namespace user_input
 
 		void raise_callbacks(std::vector<std::function<void(Key)>> callbacks, user_input::Key key)
 		{
-			for (auto & callback : callbacks)
+			if (isHandlerWindowActive())
 			{
-				callback(key);
+				for (auto& callback : callbacks)
+				{
+					callback(key);
+				}
 			}
 		}
-	}
+
+		void raise_callbacks(std::vector<std::function<void(Key, DeltaTime)>> callbacks, user_input::Key key, DeltaTime deltaTime)
+		{
+			if (isHandlerWindowActive())
+			{
+				for (auto& callback : callbacks)
+				{
+					callback(key, deltaTime);
+				}
+			}
+		}
+
 
 	bool isKeyPressed(user_input::Key key)
 	{
@@ -64,7 +110,7 @@ namespace user_input
 		_keyUpCallbacks.emplace_back(callback);
 	}
 
-	void registerHandlerFor_KeyPressed(std::function<void(Key)> callback)
+	void registerHandlerFor_KeyPressed(std::function<void(Key, DeltaTime)> callback)
 	{
 		_keyPressedCallbacks.emplace_back(callback);
 	}
@@ -76,9 +122,15 @@ namespace user_input
 
 	void updateKeyboardState()
 	{
+		using Clock = std::chrono::high_resolution_clock;
+		auto static timepoint_1 = Clock::now();
+		auto timepoint_2 = Clock::now();
+		auto deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(timepoint_2 - timepoint_1).count();
+
+
 		bool pressed = false;
 
-		for (KeyState &keyState : _keyStateList)
+		for (KeyState& keyState : _keyStateList)
 		{
 			pressed = isKeyPressed(keyState.getKey());
 
@@ -86,7 +138,7 @@ namespace user_input
 			{
 				if (keyState.isPressed())
 				{
-					raise_callbacks(_keyPressedCallbacks, keyState.getKey());
+					raise_callbacks(_keyPressedCallbacks, keyState.getKey(), deltaTime / 1000000.0);
 				}
 				else
 				{
@@ -103,5 +155,15 @@ namespace user_input
 
 			keyState.setPressed(pressed);
 		}
+
+		timepoint_1 = timepoint_2;
 	}
+
+
+	void setWindowNameHandler(std::wstring const& name)
+	{
+		_checkForWindow = true;
+		_windowHandlerName = name;
+	}
+
 }

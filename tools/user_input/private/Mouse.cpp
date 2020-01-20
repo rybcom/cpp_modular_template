@@ -2,9 +2,12 @@
 #include <vector>
 #include <Windows.h>
 #include "MouseButtonState.h"
+#include "mouseHook.h"
+#include <iostream>
 
 namespace user_input
 {
+
 
 	std::string toString(MouseButton const & button)
 	{
@@ -30,6 +33,7 @@ namespace user_input
 		std::vector<std::function<void(MouseButton const &)>> _mouseButtonPressedCallbacks;
 		std::vector<std::function<void(MouseButton const &)>> _mouseButtonDownCallbacks;
 		std::vector<std::function<void(MouseButton const &)>> _mouseButtonUpCallbacks;
+		std::vector<std::function<void(int)>> _mouseScrollCallbacks;
 
 		using MouseButtonList = std::vector<MouseButtonState>;
 		MouseButtonList _mouseButtonList;
@@ -61,8 +65,15 @@ namespace user_input
 			MouseInitializer()
 			{
 				initMouseState();
+			//	initMouseHook();
 				GetWindowRect(GetDesktopWindow(), &actualDesktop);
 			}
+			
+			~MouseInitializer()
+			{
+			//	releaseMouseHook();
+			}
+
 		} _;
 
 		void raise_mouse_move_callbacks(std::vector<std::function<void(MouseMoveArgs const &)>> callbacks, MouseMoveArgs const & args)
@@ -78,6 +89,14 @@ namespace user_input
 			for (auto & callback : callbacks)
 			{
 				callback(button);
+			}
+		}
+
+		void raise_callbacks(std::vector<std::function<void(int)>> callbacks, int value)
+		{
+			for (auto & callback : callbacks)
+			{
+				callback(value);
 			}
 		}
 
@@ -161,7 +180,7 @@ namespace user_input
 		{
 			static POINT p;
 			GetCursorPos(&p);
-			do_cursor_monitor_bounding_check(p);
+		//	do_cursor_monitor_bounding_check(p);
 
 			CursorPosition cursorPosition = { p.x,p.y };
 
@@ -174,6 +193,11 @@ namespace user_input
 				raise_mouse_move_callbacks(_mouseMoveCallbacks, args);
 			}
 		}
+	}
+
+	void process_scrolling(int scrolValue)
+	{
+		raise_callbacks(_mouseScrollCallbacks, scrolValue);
 	}
 
 	void registerHandlerFor_MouseMove(std::function<void(MouseMoveArgs const &)> callback)
@@ -196,11 +220,18 @@ namespace user_input
 		_mouseButtonDownCallbacks.emplace_back(callback);
 	}
 
+	void registerHandlerFor_MouseScroll(std::function<void(int)> callback)
+	{
+		_mouseScrollCallbacks.emplace_back(callback);
+	}
+
 	void mouseStateUpdate()
 	{
 		updateMousePosition();
 
 		updateMousekeys();
+
+		//updateMouseScroll();
 	}
 
 	bool isMouseButtonPressed(MouseButton const & button)

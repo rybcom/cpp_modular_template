@@ -1,3 +1,4 @@
+#pragma once
 
 #include <string>
 #include <sstream>
@@ -6,10 +7,19 @@
 #include <random>
 #include <iosfwd>
 #include "DataStructures.h"
+#include <optional>
 
+
+#define DECLARE_STRONG_TYPE(nametype, type) \
+struct nametype \
+{ \
+	type as_##type; \
+}
 
 namespace aux
 {
+
+
 
 #pragma region runtime
 
@@ -117,6 +127,8 @@ namespace aux
 		return stream.str();
 	}
 
+	std::string to_lower_case(std::string const & text);
+
 	std::string string_format(const std::string fmt_str, ...);
 
 	void split(std::string const& text, char delim, std::vector<std::string> & elems);
@@ -126,6 +138,15 @@ namespace aux
 	std::wstring string_to_wstring(std::string const& s);
 
 	std::string wstring_to_string(std::wstring const& s);
+
+	void shell_execute(std::string const& file, bool show_window = false);
+
+	void shell_execute(std::string const& file, std::string const & params, bool show_window = false);
+
+	std::string get_config_file(std::string const & file);
+
+	std::optional<std::string> get_command_parameter(std::size_t param_index);
+
 
 #pragma endregion
 
@@ -141,37 +162,77 @@ namespace aux
 
 #pragma region maths
 
-
-	void check_rotation_bounds(Rotation & rotation);
+	const double DEGTORAD = 0.017453292519943295769236907684886f;
+	const double RADTODEG = 57.295779513082320876798154814105f;
 
 	template <typename T>
-	void check_yaw_value(T & value)
+	inline T deg_to_rad(T & value)
 	{
-		if (value < 0)
-		{
-			value = 360 + value;
-		}
-		else if (value > 360)
-		{
-			value = value - 360;
-		}
+		return (T)(value * DEGTORAD);
 	}
 
 	template <typename T>
-	void check_pitch_value(T & value)
+	inline T rad_to_deg(T & value)
 	{
-		if (value < -90)
-		{
-			value = 0;
-		}
-		else if (value > 90)
-		{
-			value = 0;
-		}
+		return (T)(value * RADTODEG);
 	}
 
 	template <typename T>
-	Vector3<T> get_random_vector3(T from, T to)
+	inline T shiftTo_0_360(T const & value)
+	{
+
+		T result = value;
+
+		while (result > 360.0)
+		{
+			result = (T)(result - 360.0);
+		}
+
+		while (result < 0)
+		{
+			result = (T)(result + 360.0);
+		}
+		return result;
+	}
+
+	template <typename T>
+	inline T shiftTo_180_180(T const & value)
+	{
+		T result = value;
+
+		while (result > 180.0)
+		{
+			result = (T)(result - 360.0);
+		}
+
+		while (result < -180.0)
+		{
+			result = (T)(result + 360.0);
+		}
+
+		return result;
+	}
+
+	template <typename T>
+	inline T shiftTo_90_90(T const & value)
+	{
+		T result = value;
+
+		while (result > 90.0)
+		{
+			result = (T)(result - 180.0);
+		}
+
+		while (result < -90.0)
+		{
+			result = (T)(result + 180.0);
+		}
+
+		return result;
+	}
+
+	template <typename T>
+	inline Vector3<T> get_random_vector3(T from, T to)
 	{
 		Vector3<T> vec;
 		vec.x = aux::get_random_value_from_range<T>(from, to);
@@ -181,7 +242,7 @@ namespace aux
 	}
 
 	template <typename T>
-	Vector4<T> get_random_vector4(T from, T to)
+	inline Vector4<T> get_random_vector4(T from, T to)
 	{
 		Vector4<T> vec;
 		vec.x = aux::get_random_value_from_range<T>(from, to);
@@ -193,8 +254,10 @@ namespace aux
 
 	Color get_random_color();
 
+	int get_int_from_color(aux::Color const & color);
+
 	template <typename T>
-	T get_random_value_from_range(T from, T to)
+	inline T get_random_value_from_range(T from, T to)
 	{
 		std::random_device rd;
 		std::mt19937 eng(rd());
@@ -205,7 +268,7 @@ namespace aux
 
 
 	template <typename T>
-	T clamp_value(T const& value, T const& min, T const& max)
+	inline T clamp_value(T const& value, T const& min, T const& max)
 	{
 		if (value < min)
 		{
@@ -219,26 +282,26 @@ namespace aux
 		return value;
 	}
 
-	template <typename T>
-	bool is_floating_valid(T val)
-	{
-		return  !_isnan(val) && _finite(val);
-	}
-
-	template <typename T> int sgn(T val)
+	template <typename T> 
+	inline int sgn(T val)
 	{
 		return (T(0) < val) - (val < T(0));
 	}
 
 	template<typename T>
-	bool floating_are_same(T a, T b, T epsilon = 0.001)
+	inline bool floating_are_same(T a, T b, T epsilon = (T)0.00001)
 	{
 		return fabs(a - b) < epsilon;
 	}
 
+	template<typename T>
+	inline bool floating_are_not_same(T a, T b, T epsilon = (T)0.00001)
+	{
+		return fabs(a - b) > epsilon;
+	}
 
 	template <class T>
-	bool try_parse(std::string input, T & var)
+	inline bool try_parse(std::string input, T & var)
 	{
 		static const std::string ws(" \t\f\v\n\r");
 		size_t pos = input.find_last_not_of(ws);
@@ -248,6 +311,8 @@ namespace aux
 		std::stringstream buffer(input);
 		return buffer >> var && buffer.eof();
 	}
+
+
 
 #pragma endregion
 

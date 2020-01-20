@@ -11,7 +11,7 @@
 #include "StopWatch.h"
 #include "settings.h"
 
-#if (RUN_WITH_GUI() ==  false && RUN_AS_UNIT_TESTING() == false) 
+#if RUN_CONSOLE_MAIN() == true 
 
 namespace
 {

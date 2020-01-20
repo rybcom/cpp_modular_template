@@ -49,7 +49,7 @@
 
 #define  RUN_AS_UNIT_TESTING() (UNIT_TESTING_MODE() == true)
 #define  RUN_WITH_GUI() (USE_GUI() == true)
-
+#define  RUN_CONSOLE_MAIN() (RUN_WITH_GUI()==false && RUN_AS_UNIT_TESTING() == false)  
 #pragma endregion
 
 

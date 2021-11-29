@@ -1,3 +1,6 @@
+#include "project_configuration.h"
+#if USE_GUI()
+
 // dear imgui: Renderer for DirectX11
 // This needs to be used along with a Platform Binding (e.g. Win32)
 
@@ -532,3 +535,6 @@ void ImGui_ImplDX11_NewFrame()
     if (!g_pFontSampler)
         ImGui_ImplDX11_CreateDeviceObjects();
 }
+
+#endif
+

@@ -1,43 +1,41 @@
 #pragma once
 
-#ifndef CONFIGURATION_DEBUG
+#if defined(CONFIGURATION_DEBUG) && defined(CONFIGURATION_PROFILER)
 
-#error "please set preprocessor define CONFIGURATION_DEBUG=true or CONFIGURATION_DEBUG=false "
-
-#endif
-
-#ifndef CONFIGURATION_PROFILER
-
-#error "please set preprocessor define CONFIGURATION_PROFILER=true or CONFIGURATION_PROFILER=false "
+#error "multiple configuration preprocessor CONFIGURATION_DEBUG && CONFIGURATION_PROFILER "
 
 #endif
 
-#ifndef CONFIGURATION_RELEASE
+#if defined(CONFIGURATION_DEBUG) && defined(CONFIGURATION_RELEASE)
 
-#error "please set preprocessor define CONFIGURATION_RELEASE=true or CONFIGURATION_RELEASE=false "
-
-#endif
-
-#if CONFIGURATION_DEBUG && CONFIGURATION_PROFILER
-
-#error "only one configuration can be set"
+#error "multiple configuration preprocessor CONFIGURATION_DEBUG && CONFIGURATION_RELEASE "
 
 #endif
 
-#if CONFIGURATION_DEBUG && CONFIGURATION_RELEASE
+#if defined(CONFIGURATION_PROFILER) && defined(CONFIGURATION_RELEASE)
 
-#error "only one configuration can be set"
-
-#endif
-
-#if CONFIGURATION_PROFILER && CONFIGURATION_RELEASE
-
-#error "only one configuration can be set"
+#error "multiple configuration preprocessor CONFIGURATION_PROFILER && CONFIGURATION_RELEASE "
 
 #endif
 
-#if CONFIGURATION_DEBUG==false&& CONFIGURATION_PROFILER==false && CONFIGURATION_RELEASE==false
 
-#error "set configuration preprocessor define CONFIGURATION_DEBUG==true ..
+#if ((defined(CONFIGURATION_DEBUG)==false) && (defined(CONFIGURATION_PROFILER)==false) && (defined(CONFIGURATION_RELEASE)==false))
+
+#error "no configuration preprocessor is set. Use one of [ CONFIGURATION_DEBUG,CONFIGURATION_PROFILER,CONFIGURATION_RELEASE ]"
 
 #endif
+
+
+
+#if defined(CONFIGURATION_DEBUG)
+#define CONFIGURATION_NAME() "Debug"
+#endif
+
+#if defined(CONFIGURATION_PROFILER)
+#define CONFIGURATION_NAME() "Profiler"
+#endif
+
+#if defined(CONFIGURATION_RELEASE)
+#define CONFIGURATION_NAME() "Release"
+#endif
+

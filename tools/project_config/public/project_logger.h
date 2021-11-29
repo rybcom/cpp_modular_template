@@ -1,50 +1,33 @@
 #pragma once
 
-enum LogVerbosity
-{
-	Trace= 1,
-	Debug,
-	Info,
-	Warn,
-	Error,
-	Critical
-};
+#include "LoggerVerbosity.h"
+#include "Logger.h"
 
+#if defined(CONFIGURATION_DEBUG)
 
-#if CONFIGURATION_DEBUG==true
-
-#define LOG_VERBOSITY() LogVerbosity::Info
-#define LOGGING_ENABLED_IG() true
-#define LOGGING_ENABLED_DIAGNOSTIC() true
+#define LOG_VERBOSITY() LogVerbosity::Debug
+#define LOGGING_ENABLED_EVENTS() true
 #define LOGGING_ENABLED_CONSOLE() true
+#define LOGGING_ENABLED_FILE() true
 
 #endif
 
-
-#if CONFIGURATION_PROFILER==true
+#if defined(CONFIGURATION_PROFILER)
 
 #define LOG_VERBOSITY() LogVerbosity::Info
-#define LOGGING_ENABLED_IG() true
-#define LOGGING_ENABLED_DIAGNOSTIC() true
+#define LOGGING_ENABLED_EVENTS() true
 #define LOGGING_ENABLED_CONSOLE() true
+#define LOGGING_ENABLED_FILE() true
 
 #endif
 
-
-#if CONFIGURATION_RELEASE==true
+#if defined(CONFIGURATION_RELEASE)
 
 #define LOG_VERBOSITY() LogVerbosity::Warn
-#define LOGGING_ENABLED_IG() false
-#define LOGGING_ENABLED_DIAGNOSTIC() false
+#define LOGGING_ENABLED_EVENTS() false
 #define LOGGING_ENABLED_CONSOLE() true
+#define LOGGING_ENABLED_FILE() true
 
 #endif
 
-#if USE_DIAGNOSTIC_VIEWER()==false && LOGGING_ENABLED_DIAGNOSTIC()==true
-#define LOGGING_ENABLED_DIAGNOSTIC() false
-#endif
-
-#if USE_IG()==false && LOGGING_ENABLED_IG()==true
-#define LOGGING_ENABLED_IG() false
-#endif
 

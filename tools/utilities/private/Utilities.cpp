@@ -28,9 +28,9 @@ namespace aux
 
 	std::string get_config_file(std::string const & file)
 	{
-		if (auto ig_param = get_command_parameter(0))
+		if (auto param_1 = get_command_parameter(0))
 		{
-			std::string path = R"(..\init\)" + ig_param.value() + R"(\)" + file;
+			std::string path = R"(..\init\)" + param_1.value() + R"(\)" + file;
 		
 			if (std::filesystem::exists(path))
 			{

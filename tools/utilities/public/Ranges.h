@@ -29,41 +29,17 @@
 		return f(default_container<T1>::init_from(c));				\
 	}	
 
-#ifdef _HAS_CXX17
-
 #define if_ref_wrapper(wrapper,type) \
 	if(type & wrapper ##_value = wrapper->get(); wrapper)
 
 #define if_cont_ref_wrapper(wrapper,type) \
 	if(const type & wrapper ##_value = wrapper->get(); wrapper)
 
-#define if_value(pointer,type) \
-	if(type & value = *pointer;pointer)
+#define if_get_ref(pointer) \
+	if(std::remove_pointer_t<decltype(pointer)> & pointer##_ref = *pointer; pointer)
 
-#define if_const_value(pointer,type) \
-	if(const type & value = *pointer;pointer)
-
-#else
-
-#define if_ref_wrapper(wrapper,type) \
-	if( wrapper){\
-	type & value = wrapper->get();
-
-#define if_cont_ref_wrapper(wrapper,type) \
-	if( wrapper){\
-	const type & value = wrapper->get();
-
-#define if_value(pointer,type) \
-	if(pointer){ \
-	type & value = *pointer;
-
-#define if_const_value(pointer,type) \
-	if(pointer){ \
-	const type & value = *pointer;
-
-#endif
-
-#define end_if }
+#define if_get_cont_ref(pointer) \
+	if(std::remove_pointer_t<decltype(pointer)> const & pointer##_const_ref = *pointer; pointer)
 
 #pragma endregion
 
@@ -144,8 +120,6 @@ namespace views
 			{
 				result_list.push_back(const_cast<T*>(&item));
 			}
-
-
 			return result_list;
 		}
 
@@ -790,6 +764,80 @@ namespace views
 
 namespace ranges
 {
+
+	template <typename T, typename = void>
+	struct has_push_back : std::false_type {};
+
+	template <typename T>
+	struct has_push_back<T,
+		std::void_t<
+		decltype(std::declval<T>().push_back(std::declval<typename T::value_type>()))
+		>
+	> : std::true_type {};
+
+
+	template<typename Container, typename Operation>
+	void for_each(Container&& c, Operation op)
+	{
+		auto begin = c.begin();
+		auto end = c.end();
+
+		for (; begin != end; begin++) {
+			op(*begin);
+		}
+	}
+
+	template<typename Container, typename Pred, typename Operation>
+	void for_each_where(Container&& c, Pred p, Operation op)
+	{
+		auto begin = c.begin();
+		auto end = c.end();
+
+		for (; begin != end; begin++) {
+			if (p(*begin)) {
+				op(*begin);
+			}
+		}
+	}
+
+	template<typename T, template <typename, typename...> class Container, typename Operation, typename...Args>
+	void for_each(Container<std::unique_ptr<T>&&, Args...> const& c, Operation op)
+	{
+		for (auto& refUniquePtr : c)
+		{
+			op(*refUniquePtr);
+		}
+	}
+
+	template<typename T, template <typename, typename...> class Container, typename Pred, typename Operation, typename...Args>
+	void for_each_where(Container<std::unique_ptr<T>&&, Args...> const& c, Pred p, Operation op)
+	{
+		for (auto& refUniquePtr : c)
+		{
+			T& refValue = *refUniquePtr;
+			if (p(refValue))
+			{
+				op(refValue);
+			}
+		}
+	}
+
+	template <typename Container, typename Pred>
+	auto filter(Container const& c, Pred p) {
+		Container out;
+		if constexpr (has_push_back<Container>::value)
+		{
+			std::copy_if(begin(c), end(c), std::back_inserter(out), p);
+		}
+		else
+		{
+			std::copy_if(begin(c), end(c), std::inserter(out, out.begin()), p);
+		}
+
+		return out;
+	}
+
+
 	template<typename Container, typename Value>
 	size_t erase(Container&& c, Value val)
 	{

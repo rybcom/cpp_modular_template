@@ -10,6 +10,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 // Read an INI file into easy-to-access name/value pairs. (Note that I've gone
 // for simplicity here rather than speed, but it should be pretty decent.)
@@ -53,6 +54,9 @@ public:
 
     // Return true if a value exists with the given section and field names.
     bool HasValue(const std::string& section, const std::string& name) const;
+
+    std::vector<std::string> GetSectionValuesNames(const std::string & section) const;
+
 
 private:
     int _error;

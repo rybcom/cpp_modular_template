@@ -42,28 +42,15 @@ workspace (solution_name)
 
 	filter "configurations:debug"
   		optimize "Off"
-  		defines {
-  				"CONFIGURATION_DEBUG=true",
-  				"CONFIGURATION_PROFILER=false",
-  				"CONFIGURATION_RELEASE=false",
-  				}
+  		defines {"CONFIGURATION_DEBUG"}
 
 	filter "configurations:profiler"
   		optimize "Full"
-  		defines {
-  				"CONFIGURATION_DEBUG=false",
-  				"CONFIGURATION_PROFILER=true",
-  				"CONFIGURATION_RELEASE=false",
-  				}
+  		defines {"CONFIGURATION_PROFILER"}
   		
 	filter "configurations:release"
   		optimize "Full"
-  		defines {
-  				"CONFIGURATION_DEBUG=false",
-  				"CONFIGURATION_PROFILER=false",
-  				"CONFIGURATION_RELEASE=true",
-  				}
-
+  		defines {"CONFIGURATION_RELEASE"}
 
 group "app"
 
@@ -106,8 +93,7 @@ group "app"
 
 			files 
 			{
-				"src/%{prj.name}/**.cpp",
-				"src/%{prj.name}/**.h",
+				"src/%{prj.name}/**",
 			}
 
 			links
@@ -122,50 +108,26 @@ group "app"
 
 			debugargs 
 			{
-				"test_argument_1",
+				"variant_a",
 				"test_argument_2",
 				"test_argument_3",
 			}
 
+			postbuildcommands 
+			{
+				"{MKDIR} ../../bin/",
+				"{COPY} %{cfg.buildtarget.abspath} ../../bin/",
+			}
+
+			debugcommand (solution_dir .."/bin/" .. "%{cfg.buildtarget.name}")
+			debugdir (solution_dir .."/bin")
 
 			filter "configurations:debug"
-		  		defines 
-		  		{
-		  			"UPDATE_USER_INPUT_EVENTS=true",
-		  		}
-				postbuildcommands 
-				{
-	  				"{MKDIR} ../../run64_debug/",
-	  				"{COPY} %{cfg.buildtarget.abspath} ../../run64_debug/",
-				}
-				debugcommand (solution_dir .."/run64_debug/" .. "%{cfg.buildtarget.name}")
-				debugdir (solution_dir .."/run64_debug")
-
+				targetname ("application_debug")
 			filter "configurations:profiler"
-		  		defines 
-		  		{
-		  			"UPDATE_USER_INPUT_EVENTS=false",
-		  		}
-		  		postbuildcommands 
-				{
-	  				"{MKDIR} ../../run64_profiler/",
-	  				"{COPY} %{cfg.buildtarget.abspath} ../../run64_profiler/",
-				}
-		  		debugcommand (solution_dir .."/run64_profiler/" .. "%{cfg.buildtarget.name}")
-				debugdir (solution_dir .."/run64_profiler")
-			
+				targetname ("application_profiler")
 			filter "configurations:release"
-		  		defines 
-		  		{
-		  			"UPDATE_USER_INPUT_EVENTS=false",
-		  		}
-		  		postbuildcommands 
-				{
-	  				"{MKDIR} ../../run64_release/",
-	  				"{COPY} %{cfg.buildtarget.abspath} ../../run64_release/",
-				}
-		  		debugcommand (solution_dir .."/run64_release/" .. "%{cfg.buildtarget.name}")
-				debugdir (solution_dir .."/run64_release")
+				targetname ("application_release")
 
 group "tools"
 

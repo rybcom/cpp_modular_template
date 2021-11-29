@@ -1,84 +1,101 @@
 
-#include <iostream>
 
-#include "project_config.h"
-#include "Logger.h"
-#include "KeyboardEnums.h"
-#include "Keyboard.h"
-#include "Ranges.h"
-#include <vector>
-#include <string>
-#include "StopWatch.h"
-#include "settings.h"
+#include "Utilities.h"
+#include <thread>
+#include <condition_variable>
+#include <mutex>
+#include "resources/resource.h"
 
-#if RUN_CONSOLE_MAIN() == true 
+#include <Windows.h>
+#include <StopWatch.h>
+#include "Application.h"
+#include "configs/windowconfig.h"
 
 namespace
 {
-	bool bExit = false;
-	std::vector<std::string> words = { "JULY","MOUSE","TABLE","CAP","WATER","JOHN","TORONTO","CAR" };
+	bool app_exit_request{ false };
+	std::mutex m;
+	std::condition_variable cv;
+	bool closing_sequence_is_done = false;
 
-
-
-	auto constains_key_char(user_input::Key key)
+	void application_request_to_close()
 	{
-		return [key](std::string const & word)
-		{
-			return word.find(char(key)) != std::string::npos;
-		};
+		app_exit_request = true;
 	}
 
-	auto print_word(user_input::Key key)
+	void notify_closing_thread()
 	{
-		return [key](std::string const & word)
 		{
-			INFO_LOG("word: {} contain key {}", word, char(key));
-		};
-	}
-
-	void check_key_presence(user_input::Key key)
-	{
-		words | views::filter<std::string>(constains_key_char(key))
-			| views::for_each<std::string>(print_word(key));
-	}
-
-	void key_event_action(user_input::Key key)
-	{
-		if (key == user_input::Key::Escape)
-		{
-			INFO_LOG("handled request to terminate");
-
-			bExit = true;
+			std::lock_guard<std::mutex> lk(m);
+			closing_sequence_is_done = true;
 		}
-		else
-		{
-			check_key_presence(key);
-		}
-	};
+		cv.notify_one();
+	}
 
+	void closing_thread_wait()
+	{
+		std::unique_lock<std::mutex> lk(m);
+
+		application_request_to_close();
+		cv.wait(lk, [] {return closing_sequence_is_done; });
+	}
+
+	BOOL WINAPI request_close(DWORD dwType)
+	{
+		closing_thread_wait();
+		return TRUE;
+	}
+
+	void init_console()
+	{
+		::ShowWindow(::GetConsoleWindow(),
+			window_config.is_console_visible ? SW_SHOW : SW_HIDE);
+
+		std::wstring console_title = aux::string_to_wstring(aux::get_command_parameter(0).value_or("default app") + " - console");
+		::SetConsoleTitle(console_title.c_str());
+
+		SetConsoleCtrlHandler(request_close, TRUE);
+
+		events::request_close_application.bind(application_request_to_close);
+	}
+
+	void do_main_loop_execution()
+	{
+
+		BEGIN_PROFILER_SESSION("profiler_stats.json");
+
+		SandboxApp& app = SandboxApp::get();
+		app.init();
+
+		StopWatch watch;
+		watch.Restart();
+
+		const uint64_t time_dilatation_us = 16666.6667;
+
+		while (app_exit_request == false)
+		{
+			auto const elapsed_time_us = watch.elapsed_us();
+
+			if (elapsed_time_us > time_dilatation_us)
+			{
+				watch.Restart();
+				app.update();
+			}
+		}
+
+		app.close();
+
+		END_PROFILER_SESSION();
+	}
 }
 
 int main()
 {
+	init_console();
 
-	StopWatch stopwatch;
+	do_main_loop_execution();
 
-	INFO_LOG_ALWAYS("welcome : {}", config::settings.welcome_phrase);
-	INFO_LOG_ALWAYS("press ESC to exit ...");
+	notify_closing_thread();
 
-	user_input::registerHandlerFor_KeyUp(key_event_action);
-
-	stopwatch.Restart();
-
-	while (!bExit)
-	{
-		user_input::updateKeyboardState();
-	}
-
-	INFO_LOG_ALWAYS("end : {}", config::settings.goodbye_phrase);
-	INFO_LOG_ALWAYS("elapsed time : {} seconds", stopwatch.elapsed_s());
-
+	return 0;
 }
-
-#endif
-

@@ -1,0 +1,129 @@
+﻿#include "Application.h"
+#include "Logger.h"
+#include "configs/windowconfig.h"
+
+std::string to_string_log_verbosity(LogVerbosity verbosity)
+{
+	switch (verbosity)
+	{
+	case Trace:
+		return "Trace";
+	case Debug:
+		return "Debug";
+	case Info:
+		return "Info";
+	case Warn:
+		return "Warn";
+	case Error:
+		return "Error";
+	case Critical:
+		return "Critical";
+	default:
+		return "unknown";
+	}
+}
+
+void print_logo()
+{
+
+	APP_LOG(
+		R"(
+**********************************************************************************************************************************************
+*																														                    * 
+*    _|_|_|                               _|   _|                                                                          _|          _|    *
+*  _|           _|_|_|   _|_|_|       _|_|_|   _|_|_|       _|_|     _|    _|         _|_|_|   _|_|_|     _|_|_|         _|_|        _|_|    *
+*    _|_|     _|    _|   _|    _|   _|    _|   _|    _|   _|    _|     _|_|         _|    _|   _|    _|   _|    _|         _|          _|    *
+*        _|   _|    _|   _|    _|   _|    _|   _|    _|   _|    _|   _|    _|       _|    _|   _|    _|   _|    _|         _|          _|    *
+*  _|_|_|       _|_|_|   _|    _|     _|_|_|   _|_|_|       _|_|     _|    _|         _|_|_|   _|_|_|     _|_|_|           _|   _|     _|    *
+*                                                                                              _|         _|                                 *
+*                                                                                              _|         _|                                 *
+**********************************************************************************************************************************************
+)");
+}
+
+void print_preprocessor_definitions()
+{
+	TRACE_AND_PROFILE_FUNCTION();
+
+
+	CHAR name[256 + 1];
+	DWORD length = 256 + 1;
+
+	::GetComputerNameA((CHAR*)name, &length);
+	std::string computerNameStr(name);
+
+	::GetUserNameA((CHAR*)name, &length);
+	std::string userNameStr(name);
+
+	APP_LOG(
+		R"(
+___________________________________________
+
+Preprocessor definitions:
+
+    Static configuration : {}
+    Configuration variant : {}
+	USE_GUI : {}
+	USE_USER_INPUT_EVENTS : {}
+	PROFILING_MODE : {}
+	DEVEL_MODE_ENABLED : {}
+	SANITY_CHECK_ENABLED : {}
+	DEBUGGER_ASSERTION_ENABLED : {}
+
+PC info:
+	user name			: {}
+	pc name				: {}
+___________________________________________)",
+CONFIGURATION_NAME(),
+ProjectConfiguration,
+USE_GUI(),
+USE_USER_INPUT_EVENTS(),
+PROFILING_MODE(),
+DEVEL_MODE_ENABLED(),
+SANITY_CHECK_ENABLED(),
+DEBUGGER_ASSERTION_ENABLED(),
+userNameStr,
+computerNameStr
+);
+
+}
+
+void print_window_config()
+{
+	APP_LOG(
+		R"(
+___________________________________________
+
+windows settings:
+
+	viewer_height: {} 
+	viewer_width : {} 
+	viewer_position_x : {}
+	viewer_position_y : {}
+
+	is_console_visible : {} 
+	is_debug_viewer_maximized : {}
+	is_debug_viewer_visible : {}
+___________________________________________)",
+
+window_config.viewer_height,
+window_config.viewer_width,
+window_config.viewer_position_x,
+window_config.viewer_position_y,
+
+window_config.is_console_visible,
+window_config.is_debug_viewer_maximized,
+window_config.is_debug_viewer_visible
+);
+}
+
+void print_starting_info()
+{
+	TRACE_AND_PROFILE_FUNCTION();
+
+	print_logo();
+	print_preprocessor_definitions();
+	print_window_config();
+}
+
+

@@ -28,22 +28,17 @@ void print_logo()
 
 	APP_LOG(
 		R"(
-**********************************************************************************************************************************************
-*																														                    * 
-*    _|_|_|                               _|   _|                                                                          _|          _|    *
-*  _|           _|_|_|   _|_|_|       _|_|_|   _|_|_|       _|_|     _|    _|         _|_|_|   _|_|_|     _|_|_|         _|_|        _|_|    *
-*    _|_|     _|    _|   _|    _|   _|    _|   _|    _|   _|    _|     _|_|         _|    _|   _|    _|   _|    _|         _|          _|    *
-*        _|   _|    _|   _|    _|   _|    _|   _|    _|   _|    _|   _|    _|       _|    _|   _|    _|   _|    _|         _|          _|    *
-*  _|_|_|       _|_|_|   _|    _|     _|_|_|   _|_|_|       _|_|     _|    _|         _|_|_|   _|_|_|     _|_|_|           _|   _|     _|    *
-*                                                                                              _|         _|                                 *
-*                                                                                              _|         _|                                 *
-**********************************************************************************************************************************************
+**********************************************************************************
+*																			     *									      
+*                                 Sandbox app                                    *
+*																			     *									      
+**********************************************************************************
 )");
 }
 
 void print_preprocessor_definitions()
 {
-	TRACE_AND_PROFILE_FUNCTION();
+	TRACE_FUNCTION();
 
 
 	CHAR name[256 + 1];
@@ -64,8 +59,6 @@ Preprocessor definitions:
     Static configuration : {}
     Configuration variant : {}
 	USE_GUI : {}
-	USE_USER_INPUT_EVENTS : {}
-	PROFILING_MODE : {}
 	DEVEL_MODE_ENABLED : {}
 	SANITY_CHECK_ENABLED : {}
 	DEBUGGER_ASSERTION_ENABLED : {}
@@ -77,8 +70,6 @@ ___________________________________________)",
 CONFIGURATION_NAME(),
 ProjectConfiguration,
 USE_GUI(),
-USE_USER_INPUT_EVENTS(),
-PROFILING_MODE(),
 DEVEL_MODE_ENABLED(),
 SANITY_CHECK_ENABLED(),
 DEBUGGER_ASSERTION_ENABLED(),
@@ -119,7 +110,7 @@ config::windows.is_debug_viewer_visible
 
 void print_starting_info()
 {
-	TRACE_AND_PROFILE_FUNCTION();
+	TRACE_FUNCTION();
 
 	print_logo();
 	print_preprocessor_definitions();

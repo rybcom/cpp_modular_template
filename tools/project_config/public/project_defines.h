@@ -16,28 +16,8 @@
 #define DEBUG_BREAKPOINT()
 #endif
 
-
-#if PROFILING_MODE() == true
-
-#include "ProfilingTools.h"
-
-#define  SCOPE_PROFILE(name) ProfilerTimeWatch timer##__LINE__(name)
-#define  FUNCTION_PROFILE()  SCOPE_PROFILE(__FUNCSIG__)
-#define  BEGIN_PROFILER_SESSION(file) ProfilerInstrument::Get().BeginSession(file) 
-#define  END_PROFILER_SESSION() ProfilerInstrument::Get().EndSession() 
-
-#else
-
-#define  SCOPE_PROFILE(name) 
-#define  FUNCTION_PROFILE()
-#define  BEGIN_PROFILER_SESSION(file)  
-#define  END_PROFILER_SESSION()
-
-#endif
-
-#define  TRACE_AND_PROFILE_FUNCTION() \
-LOG_TRACE_FUNCTION(); \
-FUNCTION_PROFILE() \
+#define  TRACE_FUNCTION() \
+LOG_TRACE_FUNCTION(); 
 
 #if SANITY_CHECK_ENABLED() == true
 #define TESTCHECK(expression) expression

@@ -22,7 +22,6 @@ workspace (solution_name)
 		"tools/project_config/public",
 		"tools/fmt/public",
 		"tools/logger/public",
-		"tools/user_input/public",
 		"tools/utilities/public",
 		"tools/tomlplusplus/public",
 		"tools/event_system/public",
@@ -100,7 +99,6 @@ group "app"
 			{
 				"fmt",
 				"imgui",
-				"user_input",
 				"utilities",
 				"stopwatch"
 			}
@@ -223,32 +221,6 @@ group "tools"
 					"tools/%{prj.name}/**.h",
 				}
 
-
-			----------------------------------------------
-		  	--										    --
-		  	--					user_input				--
-		  	--											--
-		  	----------------------------------------------
-
-			project "user_input"
-				location "intermediate/project_files"
-				kind "StaticLib"
-				language "C++"
-				cppdialect "C++17"
-
-				includedirs
-				{
-					"tools/%{prj.name}/public",
-					"tools/%{prj.name}/private",
-				}
-
-				files 
-				{
-					"tools/%{prj.name}/**.cpp",
-					"tools/%{prj.name}/**.h",
-				}
-
-		
 			----------------------------------------------
 		  	--										    --
 		  	--					logger					--

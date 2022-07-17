@@ -22,7 +22,7 @@ void print_starting_info();
 
 void update_debug_viewer()
 {
-	TRACE_AND_PROFILE_FUNCTION();
+	TRACE_FUNCTION();
 
 	if (debug_ui::update() == debug_ui::DebugViewerResult::RequestClose)
 	{
@@ -45,7 +45,7 @@ namespace
 
 	std::string get_file_logger_name_and_crate_log_directory()
 	{
-		TRACE_AND_PROFILE_FUNCTION();
+		TRACE_FUNCTION();
 
 		std::time_t t = std::time(nullptr);
 		auto& time = *std::localtime(&t);
@@ -84,7 +84,7 @@ SandboxApp& SandboxApp::get()
 
 void SandboxApp::init()
 {
-	TRACE_AND_PROFILE_FUNCTION();
+	TRACE_FUNCTION();
 
 	pre_initialization();
 
@@ -102,7 +102,7 @@ void SandboxApp::update()
 {
 	UPDATE_DEBUG_VIEWER();
 
-	TRACE_AND_PROFILE_FUNCTION();
+	TRACE_FUNCTION();
 
 	_deltaTime = 0.016666667;
 	_globalTime += _deltaTime;
@@ -115,7 +115,7 @@ void SandboxApp::update()
 
 void SandboxApp::close()
 {
-	TRACE_AND_PROFILE_FUNCTION();
+	TRACE_FUNCTION();
 
 	APP_LOG("closing sequence started");
 

@@ -5,8 +5,6 @@
 #if defined(CONFIGURATION_DEBUG)
 
 #define USE_GUI() true
-#define USE_USER_INPUT_EVENTS() true
-#define PROFILING_MODE() true
 #define DEVEL_MODE_ENABLED() true
 #define SANITY_CHECK_ENABLED() true
 #define DEBUGGER_ASSERTION_ENABLED() false
@@ -16,8 +14,6 @@
 #if defined(CONFIGURATION_PROFILER)
 
 #define USE_GUI() true
-#define USE_USER_INPUT_EVENTS() true
-#define PROFILING_MODE() false
 #define DEVEL_MODE_ENABLED() true
 #define SANITY_CHECK_ENABLED() true
 #define DEBUGGER_ASSERTION_ENABLED() false
@@ -27,8 +23,6 @@
 #if defined(CONFIGURATION_RELEASE)
 
 #define USE_GUI() false
-#define USE_USER_INPUT_EVENTS() true
-#define PROFILING_MODE() false
 #define DEVEL_MODE_ENABLED() true
 #define SANITY_CHECK_ENABLED() true
 #define DEBUGGER_ASSERTION_ENABLED() false

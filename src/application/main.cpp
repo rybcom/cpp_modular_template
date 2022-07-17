@@ -61,9 +61,6 @@ namespace
 
 	void do_main_loop_execution()
 	{
-
-		BEGIN_PROFILER_SESSION("profiler_stats.json");
-
 		SandboxApp& app = SandboxApp::get();
 		app.init();
 
@@ -84,8 +81,6 @@ namespace
 		}
 
 		app.close();
-
-		END_PROFILER_SESSION();
 	}
 }
 

@@ -10,23 +10,23 @@ class TestModul : public BaseModul
 {
 public:
 
-	virtual void init() override
+	void init() override
 	{
 		INFO_LOG(__FUNCSIG__);
-		INFO_LOG("welcome : {}", setting_config.welcome_phrase);
+		INFO_LOG("welcome : {}", config::settings.welcome_phrase);
 
 		printApplicationTimeEverySecond();
 	}
 
-	virtual void update() override
+	void update() override
 	{
 		_defferedActions.update(DeltaTime{ SandboxApp::get().getDeltaTime() });
 	}
 
-	virtual void close() override
+	void close() override
 	{
 		INFO_LOG(__FUNCSIG__);
-		INFO_LOG("application is closing : {}", setting_config.goodbye_phrase);
+		INFO_LOG("application is closing : {}",config::settings.goodbye_phrase);
 	}
 
 private:

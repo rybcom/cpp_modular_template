@@ -49,7 +49,7 @@ namespace
 	void init_console()
 	{
 		::ShowWindow(::GetConsoleWindow(),
-			window_config.is_console_visible ? SW_SHOW : SW_HIDE);
+			config::windows.is_console_visible ? SW_SHOW : SW_HIDE);
 
 		std::wstring console_title = aux::string_to_wstring(aux::get_command_parameter(0).value_or("default app") + " - console");
 		::SetConsoleTitle(console_title.c_str());

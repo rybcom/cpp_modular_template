@@ -106,14 +106,14 @@ windows settings:
 	is_debug_viewer_visible : {}
 ___________________________________________)",
 
-window_config.viewer_height,
-window_config.viewer_width,
-window_config.viewer_position_x,
-window_config.viewer_position_y,
+config::windows.viewer_height,
+config::windows.viewer_width,
+config::windows.viewer_position_x,
+config::windows.viewer_position_y,
 
-window_config.is_console_visible,
-window_config.is_debug_viewer_maximized,
-window_config.is_debug_viewer_visible
+config::windows.is_console_visible,
+config::windows.is_debug_viewer_maximized,
+config::windows.is_debug_viewer_visible
 );
 }
 

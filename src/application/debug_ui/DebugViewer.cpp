@@ -63,10 +63,10 @@ namespace debug_ui
 		wc = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(NULL), NULL, NULL, NULL, NULL, _T("SandboxApp"), NULL };
 		::RegisterClassEx(&wc);
 		hwnd = ::CreateWindow(wc.lpszClassName, window_title.c_str(), WS_OVERLAPPEDWINDOW,
-			window_config.viewer_position_x,
-			window_config.viewer_position_y,
-			window_config.viewer_width,
-			window_config.viewer_height, NULL, NULL, wc.hInstance, NULL);
+			config::windows.viewer_position_x,
+			config::windows.viewer_position_y,
+			config::windows.viewer_width,
+			config::windows.viewer_height, NULL, NULL, wc.hInstance, NULL);
 
 		// Initialize Direct3D
 		if (!CreateDeviceD3D(hwnd, 60))
@@ -76,10 +76,10 @@ namespace debug_ui
 			return;
 		}
 
-		if (window_config.is_debug_viewer_visible)
+		if (config::windows.is_debug_viewer_visible)
 		{
 			::ShowWindow(hwnd,
-				window_config.is_debug_viewer_maximized ? SW_SHOWMAXIMIZED : SW_SHOWNORMAL);
+				config::windows.is_debug_viewer_maximized ? SW_SHOWMAXIMIZED : SW_SHOWNORMAL);
 		}
 		else
 		{

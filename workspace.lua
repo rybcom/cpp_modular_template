@@ -24,7 +24,7 @@ workspace (solution_name)
 		"tools/logger/public",
 		"tools/user_input/public",
 		"tools/utilities/public",
-		"tools/config/public",
+		"tools/tomlplusplus/public",
 		"tools/event_system/public",
 		"tools/stopwatch/public",
 		"tools/catch2/public",
@@ -101,7 +101,6 @@ group "app"
 				"fmt",
 				"imgui",
 				"user_input",
-				"config",
 				"utilities",
 				"stopwatch"
 			}
@@ -298,30 +297,26 @@ group "tools"
 				
 			----------------------------------------------
 		  	--										    --
-		  	--					config 					--
+		  	--					tomlplusplus            --
 		  	--											--
 		  	----------------------------------------------
 
-			project "config"
+			project "tomlplusplus"
 				location "intermediate/project_files"
-				kind "StaticLib"
+				kind "none"
 				language "C++"
 				cppdialect "C++17"
 			
 				includedirs
 				{
 					"tools/%{prj.name}/public",
-					"tools/%{prj.name}/private",
 				}
 
 				files 
 				{
-					"tools/%{prj.name}/**.c",
-					"tools/%{prj.name}/**.cpp",
+					"tools/%{prj.name}/**.inl",
 					"tools/%{prj.name}/**.h",
 				}
-
-		
 
 		
 		group ""

@@ -2,15 +2,7 @@
 
 #include "project_config.h"
 #include "toml.h"
-#include "Utilities.h"
 #include <string_view>
-
-inline std::string find_file_path(std::string const& file)
-{
-	static auto config_arg = aux::get_command_parameter(0).value_or("default");
-	set_project_configuration(config_arg);
-	return get_init_file(file);
-}
 
 namespace config
 {
@@ -26,7 +18,7 @@ namespace config
 
 		window_config_t()
 		{
-			std::string config_file_path = find_file_path("window_config.ini");
+			std::string config_file_path = get_init_file("window_config.ini");
 			toml::table tbl = toml::parse_file(config_file_path);
 
 			is_debug_viewer_maximized = tbl["viewer"]["is_debug_viewer_maximized"].value_or(is_debug_viewer_maximized);

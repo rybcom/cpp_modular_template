@@ -2,6 +2,7 @@
 
 #include <string>
 #include <fmt/header_only.h>
+#include "Utilities.h"
 
 #pragma region project paths
 
@@ -24,7 +25,13 @@ inline void set_project_configuration(std::string_view configuration)
 
 inline std::string get_init_file(std::string_view file)
 {
+	static auto config_arg = aux::get_command_parameter(0).value_or("default");
+	set_project_configuration(config_arg);
+	
 	return fmt::format(R"({}{}\{})", ProjectInitDirPath, ProjectConfiguration, file);
 }
+
+
+
 
 #pragma endregion

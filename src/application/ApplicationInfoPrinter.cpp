@@ -1,6 +1,8 @@
 ﻿#include "Application.h"
 #include "Logger.h"
+
 #include "configs/windowconfig.h"
+#include "configs/settings.h"
 
 std::string to_string_log_verbosity(LogVerbosity verbosity)
 {
@@ -18,6 +20,8 @@ std::string to_string_log_verbosity(LogVerbosity verbosity)
 		return "Error";
 	case Critical:
 		return "Critical";
+	case Application:
+		return "Application";
 	default:
 		return "unknown";
 	}
